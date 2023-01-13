@@ -1,6 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
 import {
-  Button,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -14,7 +13,7 @@ import Task from './components/Taks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { ITask } from './interface';
-
+import { Picker } from '@react-native-picker/picker';
 const initialData: ITask[] = [
   {
     id: '1',
@@ -39,6 +38,7 @@ const initialData: ITask[] = [
 export default function App() {
   const [todoList, setTodoList] = useState<ITask[]>(initialData);
   const [task, setTask] = useState('');
+  const [priority, setPriority] = useState('High');
 
   /*  TODO: Fetch data
   const getData = async () => {
@@ -58,7 +58,7 @@ export default function App() {
     const newTask: ITask = {
       id: Date.now() + task,
       title: task,
-      priority: 'High',
+      priority,
       status: 'pending'
     };
     setTask('');
@@ -109,17 +109,27 @@ export default function App() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.writeTaskWrapper}
         >
-          <TextInput
-            style={styles.input}
-            placeholder='Write a task'
-            onChangeText={(text) => setTask(text)}
-            value={task}
-          />
-          <TouchableOpacity onPress={() => handleAddTask()}>
-            <View style={styles.addWrapper}>
-              <Text style={styles.addText}>+</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.writeTaskContainer}>
+            <Picker
+            style={{width:100}}
+              selectedValue={priority}
+              onValueChange={(itemValue) => setPriority(itemValue)}
+            >
+              <Picker.Item label='High' value='High' />
+              <Picker.Item label='Low' value='Low' />
+            </Picker>
+            <TextInput
+              style={styles.input}
+              placeholder='Write a task'
+              onChangeText={(text) => setTask(text)}
+              value={task}
+            />
+            <TouchableOpacity onPress={() => handleAddTask()}>
+              <View style={styles.addWrapper}>
+                <Text style={styles.addText}>+</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
 
         <StatusBar style='auto' />
@@ -162,6 +172,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 10
   },
+  writeTaskContainer:{
+    flexDirection: 'row',
+
+  },
   input: {
     paddingVertical: 15,
     paddingHorizontal: 15,
@@ -169,7 +183,7 @@ const styles = StyleSheet.create({
     borderColor: '#C0C0C0',
     borderWidth: 1,
     borderRadius: 60,
-    width: 250
+    width: 200
   },
   addWrapper: {
     width: 60,
