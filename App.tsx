@@ -40,6 +40,7 @@ export default function App() {
   const [task, setTask] = useState('');
   const [priority, setPriority] = useState('High');
   const [sorterBy, setSorterBy] = useState('');
+  const [finishedTasks, setFinishedTasks] = useState(0);
 
   /*  TODO: Fetch data
   const getData = async () => {
@@ -103,14 +104,23 @@ export default function App() {
     setTodoList(sortedTodoList);
   };
 
+  useEffect(() => {
+    let newFinishedTasks = 0;
+    todoList.map((task) => {
+      if (task.status === 'finished') {
+        ++newFinishedTasks;
+      }
+    });
+    setFinishedTasks(newFinishedTasks);
+  }, [todoList]);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Todo List</Text>
+        <Text>Completed Taks: {finishedTasks}</Text>
 
-        <View
-          style={styles.sorterPicker}
-        >
+        <View style={styles.sorterPicker}>
           <Picker
             selectedValue={sorterBy}
             onValueChange={(itemValue) => sortList(itemValue)}
@@ -228,11 +238,11 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   addText: {},
-  sorterPicker:{
+  sorterPicker: {
     borderWidth: 1,
     borderColor: '#C0C0C0',
     borderRadius: 30,
     backgroundColor: '#f2f2f2',
-    marginTop:10
+    marginTop: 10
   }
 });
