@@ -6,9 +6,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export type Props = {
   id: string;
   title: string;
-  priority: number;
+  priority: string;
   status: 'pending' | 'finished';
   onHandleDeleteTask: (id: string) => void;
+  onHandleCompleteTask: (id: string) => void;
 };
 
 const Task: React.FC<Props> = ({
@@ -16,14 +17,23 @@ const Task: React.FC<Props> = ({
   title,
   priority,
   status,
-  onHandleDeleteTask
+  onHandleDeleteTask,
+  onHandleCompleteTask
 }) => {
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
-        <TouchableOpacity style={styles.square}></TouchableOpacity>
-        <Text style={styles.itemText}>{title}</Text>
+        <View style={styles.square}>
+        <Text>{priority}</Text>
+
+        </View>
+        <View style={styles.textSpace}>
+          <Text style={styles.itemText}>{title}</Text>
+
+          <Text style={styles.statusTextPending}>{status}</Text>
+        </View>
       </View>
+
       <View style={styles.icons}>
         <MaterialCommunityIcons
           name='delete-circle-outline'
@@ -31,12 +41,23 @@ const Task: React.FC<Props> = ({
           color='red'
           onPress={() => onHandleDeleteTask(id)}
         />
-        <MaterialCommunityIcons
-          name='check-circle-outline'
-          size={35}
-          color='green'
-          style={styles.deleteIcon}
-        />
+        {status === 'finished' ? (
+          <MaterialCommunityIcons
+            name='undo'
+            size={35}
+            color='black'
+            style={styles.rightIcon}
+            onPress={() => onHandleCompleteTask(id)}
+          />
+        ) : (
+          <MaterialCommunityIcons
+            name='check-circle-outline'
+            size={35}
+            color='green'
+            style={styles.rightIcon}
+            onPress={() => onHandleCompleteTask(id)}
+          />
+        )}
       </View>
     </View>
   );
@@ -54,15 +75,14 @@ const styles = StyleSheet.create({
   },
   itemLeft: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
   square: {
-    width: 24,
-    height: 24,
-    backgroundColor: '#55BCF6',
+    width: 40,
     opacity: 0.4,
     borderRadius: 5,
     marginRight: 15
   },
   itemText: {
-    maxWidth: '80%'
+    maxWidth: '80%',
+    fontSize: 18
   },
   circular: {
     width: 12,
@@ -76,8 +96,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around'
   },
-  deleteIcon: {
+  rightIcon: {
     marginLeft: 15
+  },
+  textSpace: {
+    width: '60%'
+
+  },
+  statusTextPending: {
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal:8,
+    backgroundColor: 'yellow',
+    borderRadius: 20,
+    maxWidth: '40%',
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#c2c2c2'
   }
 });
 export default Task;

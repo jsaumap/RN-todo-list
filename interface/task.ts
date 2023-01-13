@@ -1,6 +1,6 @@
 export interface ITask {
   id: string;
   title: string;
-  priority: number;
+  priority: string;
   status: 'pending' | 'finished';
 }

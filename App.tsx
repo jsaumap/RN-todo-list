@@ -19,19 +19,19 @@ const initialData: ITask[] = [
   {
     id: '1',
     title: 'first task',
-    priority: 1,
+    priority: 'HIGH',
     status: 'pending'
   },
   {
     id: '2',
     title: 'second task',
-    priority: 1,
+    priority: 'Low',
     status: 'pending'
   },
   {
     id: '3',
     title: 'third task',
-    priority: 1,
+    priority: 'Low',
     status: 'finished'
   }
 ];
@@ -58,22 +58,39 @@ export default function App() {
     const newTask: ITask = {
       id: Date.now() + task,
       title: task,
-      priority: 1,
+      priority: 'High',
       status: 'pending'
     };
-    setTask('')
+    setTask('');
     setTodoList([...todoList, newTask]);
   };
 
-  const handleDeleteTask = (id:string) => {
-    const filterTodoList = todoList.filter(task => task.id !== id)
+  const handleDeleteTask = (id: string) => {
+    const filterTodoList = todoList.filter((task) => task.id !== id);
     setTodoList(filterTodoList);
-  }
+  };
+  const handleCompleteTask = (id: string) => {
+    const newTodoList: ITask[] = todoList.map((task) => {
+      if (task.id === id) {
+        return {
+          ...task,
+          status: task.status === 'finished' ? 'pending' : 'finished'
+        };
+      }
+      return task;
+    });
+    setTodoList(newTodoList);
+  };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Todo List</Text>
+        <View style={styles.listTitles}>
+          <Text style={styles.subTitle}>Priority</Text>
+          <Text style={styles.subTitle}>Task</Text>
+          <Text style={styles.subTitleLeft}>Actions</Text>
+        </View>
         <View style={styles.items}>
           {todoList.map((task) => (
             <Task
@@ -83,6 +100,7 @@ export default function App() {
               status={task.status}
               priority={task.priority}
               onHandleDeleteTask={handleDeleteTask}
+              onHandleCompleteTask={handleCompleteTask}
             />
           ))}
         </View>
@@ -116,6 +134,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#E8EAED '
   },
+  listTitles: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingTop: 30
+  },
+  subTitle: {
+    paddingLeft: 10,
+    fontWeight: 'bold'
+  },
+  subTitleLeft: {
+    paddingLeft: 180,
+    fontWeight: 'bold'
+  },
   tasksWrapper: {
     paddingTop: 80,
     paddingHorizontal: 20
@@ -123,15 +154,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24
   },
-  items: {
-    marginTop: 30
-  },
+  items: {},
   writeTaskWrapper: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingBottom:10
+    paddingBottom: 10
   },
   input: {
     paddingVertical: 15,
