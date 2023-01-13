@@ -4,17 +4,17 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export type Props = {
   id: string;
-  description: string;
+  title: string;
   priority: number;
   status: 'pending' | 'finished';
 };
 
-const Task: React.FC<Props> = ({ id, description, priority, status }) => {
+const Task: React.FC<Props> = ({ id, title, priority, status }) => {
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
         <TouchableOpacity style={styles.square}></TouchableOpacity>
-        <Text style={styles.itemText}>{description}</Text>
+        <Text style={styles.itemText}>{title}</Text>
       </View>
       <View style={styles.circular}></View>
     </View>
