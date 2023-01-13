@@ -3,6 +3,7 @@ import {
   Button,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -54,18 +55,23 @@ export default function App() {
     }
   }; */
   const handleAddTask = () => {
-    console.log(task);
     const newTask: ITask = {
       id: Date.now() + task,
       title: task,
       priority: 1,
       status: 'pending'
     };
+    setTask('')
     setTodoList([...todoList, newTask]);
   };
 
+  const handleDeleteTask = (id:string) => {
+    const filterTodoList = todoList.filter(task => task.id !== id)
+    setTodoList(filterTodoList);
+  }
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Todo List</Text>
         <View style={styles.items}>
@@ -76,6 +82,7 @@ export default function App() {
               title={task.title}
               status={task.status}
               priority={task.priority}
+              onHandleDeleteTask={handleDeleteTask}
             />
           ))}
         </View>
@@ -88,6 +95,7 @@ export default function App() {
             style={styles.input}
             placeholder='Write a task'
             onChangeText={(text) => setTask(text)}
+            value={task}
           />
           <TouchableOpacity onPress={() => handleAddTask()}>
             <View style={styles.addWrapper}>
@@ -98,7 +106,7 @@ export default function App() {
 
         <StatusBar style='auto' />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -122,7 +130,8 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingBottom:10
   },
   input: {
     paddingVertical: 15,
