@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Task from './components/Taks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ITask } from './interface';
 import { Picker } from '@react-native-picker/picker';
 const initialData: ITask[] = [
@@ -39,6 +39,7 @@ export default function App() {
   const [todoList, setTodoList] = useState<ITask[]>(initialData);
   const [task, setTask] = useState('');
   const [priority, setPriority] = useState('High');
+  const [sorterBy, setSorterBy] = useState('');
 
   /*  TODO: Fetch data
   const getData = async () => {
@@ -82,10 +83,42 @@ export default function App() {
     setTodoList(newTodoList);
   };
 
+  const sortList = (sorter: string) => {
+    setSorterBy(sorter);
+
+    const sortedTodoList = todoList.sort((a, b) => {
+      if (sorter === 'name') {
+        if (a.title < b.title) return -1;
+        if (a.title > b.title) return 1;
+        return 0;
+      }
+      if (sorter === 'priority') {
+        if (a.priority < b.priority) return -1;
+        if (a.priority > b.priority) return 1;
+        return 0;
+      }
+
+      return 0;
+    });
+    setTodoList(sortedTodoList);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Todo List</Text>
+
+        <View
+          style={styles.sorterPicker}
+        >
+          <Picker
+            selectedValue={sorterBy}
+            onValueChange={(itemValue) => sortList(itemValue)}
+          >
+            <Picker.Item label='Sorter by: Priority' value='priority' />
+            <Picker.Item label='Sorter by: Name' value='name' />
+          </Picker>
+        </View>
         <View style={styles.listTitles}>
           <Text style={styles.subTitle}>Priority</Text>
           <Text style={styles.subTitle}>Task</Text>
@@ -111,7 +144,7 @@ export default function App() {
         >
           <View style={styles.writeTaskContainer}>
             <Picker
-            style={{width:100}}
+              style={{ width: 100 }}
               selectedValue={priority}
               onValueChange={(itemValue) => setPriority(itemValue)}
             >
@@ -172,9 +205,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 10
   },
-  writeTaskContainer:{
-    flexDirection: 'row',
-
+  writeTaskContainer: {
+    flexDirection: 'row'
   },
   input: {
     paddingVertical: 15,
@@ -195,5 +227,12 @@ const styles = StyleSheet.create({
     borderColor: '#C0C0C0',
     borderWidth: 1
   },
-  addText: {}
+  addText: {},
+  sorterPicker:{
+    borderWidth: 1,
+    borderColor: '#C0C0C0',
+    borderRadius: 30,
+    backgroundColor: '#f2f2f2',
+    marginTop:10
+  }
 });
