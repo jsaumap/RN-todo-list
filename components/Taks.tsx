@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export type Props = {
@@ -21,11 +21,10 @@ const Task: React.FC<Props> = ({
   onHandleCompleteTask
 }) => {
   return (
-    <View style={styles.item}>
+    <View style={styles.item} testID={`task-${id}`}>
       <View style={styles.itemLeft}>
         <View style={styles.square}>
-        <Text>{priority}</Text>
-
+          <Text>{priority}</Text>
         </View>
         <View style={styles.textSpace}>
           <Text style={styles.itemText}>{title}</Text>
@@ -35,28 +34,41 @@ const Task: React.FC<Props> = ({
       </View>
 
       <View style={styles.icons}>
-        <MaterialCommunityIcons
-          name='delete-circle-outline'
-          size={35}
-          color='red'
+        <TouchableOpacity
+          testID={`delete-button-${id}`}
           onPress={() => onHandleDeleteTask(id)}
-        />
+        >
+          <MaterialCommunityIcons
+            name='delete-circle-outline'
+            size={35}
+            color='red'
+          />
+        </TouchableOpacity>
+
         {status === 'finished' ? (
-          <MaterialCommunityIcons
-            name='undo'
-            size={35}
-            color='black'
-            style={styles.rightIcon}
+          <TouchableOpacity
+            testID={`complete-button-${id}`}
             onPress={() => onHandleCompleteTask(id)}
-          />
+          >
+            <MaterialCommunityIcons
+              name='undo'
+              size={35}
+              color='black'
+              style={styles.rightIcon}
+            />
+          </TouchableOpacity>
         ) : (
-          <MaterialCommunityIcons
-            name='check-circle-outline'
-            size={35}
-            color='green'
-            style={styles.rightIcon}
+          <TouchableOpacity
+            testID={`complete-button-${id}`}
             onPress={() => onHandleCompleteTask(id)}
-          />
+          >
+            <MaterialCommunityIcons
+              name='check-circle-outline'
+              size={35}
+              color='green'
+              style={styles.rightIcon}
+            />
+          </TouchableOpacity>
         )}
       </View>
     </View>
@@ -101,13 +113,12 @@ const styles = StyleSheet.create({
   },
   textSpace: {
     width: '60%'
-
   },
   statusTextPending: {
     alignContent: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal:8,
+    paddingHorizontal: 8,
     backgroundColor: 'yellow',
     borderRadius: 20,
     maxWidth: '40%',

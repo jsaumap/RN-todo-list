@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { ITask } from './interface';
 import { Picker } from '@react-native-picker/picker';
+import React from 'react';
 const initialData: ITask[] = [
   {
     id: '1',
@@ -115,26 +116,33 @@ export default function App() {
   }, [todoList]);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} testID='todo-list'>
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Todo List</Text>
         <Text>Completed Taks: {finishedTasks}</Text>
 
-        <View style={styles.sorterPicker}>
-          <Picker
-            selectedValue={sorterBy}
-            onValueChange={(itemValue) => sortList(itemValue)}
+        <View style={styles.sortButtons}>
+          <TouchableOpacity
+            style={styles.sortButton}
+            testID='sort-by-name'
+            onPress={() => sortList('name')}
           >
-            <Picker.Item label='Sorter by: Priority' value='priority' />
-            <Picker.Item label='Sorter by: Name' value='name' />
-          </Picker>
+            <Text>Sort by name</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.sortButton}
+            testID='sort-by-priority'
+            onPress={() => sortList('priority')}
+          >
+            <Text>Sort by priority</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.listTitles}>
           <Text style={styles.subTitle}>Priority</Text>
           <Text style={styles.subTitle}>Task</Text>
           <Text style={styles.subTitleLeft}>Actions</Text>
         </View>
-        <View style={styles.items}>
+        <View style={styles.items}  testID='task-list'>
           {todoList.map((task) => (
             <Task
               key={task.id}
@@ -154,6 +162,7 @@ export default function App() {
         >
           <View style={styles.writeTaskContainer}>
             <Picker
+              testID='input-priority'
               style={{ width: 100 }}
               selectedValue={priority}
               onValueChange={(itemValue) => setPriority(itemValue)}
@@ -162,6 +171,7 @@ export default function App() {
               <Picker.Item label='Low' value='Low' />
             </Picker>
             <TextInput
+              testID='input-task'
               style={styles.input}
               placeholder='Write a task'
               onChangeText={(text) => setTask(text)}
@@ -169,7 +179,9 @@ export default function App() {
             />
             <TouchableOpacity onPress={() => handleAddTask()}>
               <View style={styles.addWrapper}>
-                <Text style={styles.addText}>+</Text>
+                <Text style={styles.addText} testID={'add-button'}>
+                  +
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -244,5 +256,20 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: '#f2f2f2',
     marginTop: 10
+  },
+  sortButtons: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10
+  },
+  sortButton: {
+    width: '45%',
+    backgroundColor: '#f5f5f5',
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5
   }
 });
